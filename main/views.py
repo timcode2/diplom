@@ -1,4 +1,3 @@
-# main/views.py
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.core.mail import send_mail
@@ -8,6 +7,24 @@ from config.settings import EMAIL_HOST_USER
 from main.serializers import DocumentSerializer, DocumentListSerializer, DocumentCheckSerializer, DocumentIdSerializer, \
     DocumentAllSerializer
 from users.models import User
+
+
+def send_approval_notification(user_email):
+    send_mail(
+        subject='Ответ администратора',
+        message=f'Ваш документ принят {user_email}',
+        from_email=EMAIL_HOST_USER,
+        recipient_list=[user_email]
+    )
+
+
+def send_rejection_notification(user_email):
+    send_mail(
+        subject='Ответ администратора',
+        message=f'Ваш документ отклонён, попробуйте отправить его еще раз {user_email}',
+        from_email=EMAIL_HOST_USER,
+        recipient_list=[user_email]
+    )
 
 
 class DocumentCreateAPIView(generics.CreateAPIView):
@@ -59,26 +76,20 @@ class DocumentUpdateAPIView(generics.UpdateAPIView):
         accept_file_after = serializer.instance.accept_file
         denied_file_after = serializer.instance.denied_file
 
+        print(f'accept_file_before: {accept_file_before}, denied_file_before: {denied_file_before}')
+        print(f'accept_file_after: {accept_file_after}, denied_file_after: {denied_file_after}')
+
         if accept_file_after != denied_file_after:
             # Проверяем изменения и выполняем нужные действия
             if accept_file_before != accept_file_after and accept_file_after:
-                # Отправляем письмо владельцу документа о том, что документ принят
+                # Отправляем уведомление о принятии
                 print('Документ принят')
-                send_mail(
-                    subject='Ответ администратора',
-                    message=f'Ваш документ принят {self.request.user.email}',
-                    from_email=EMAIL_HOST_USER,
-                    recipient_list=[instance.user.email]
-                )
+                send_approval_notification(instance)
 
             if denied_file_before != denied_file_after and denied_file_after:
-                # Отправляем письмо владельцу документа о том, что документ отклонен
-                send_mail(
-                    subject='Ответ администратора',
-                    message=f'Ваш документ отклонён, попробуйте отправить его еще раз {self.request.user.email}',
-                    from_email=EMAIL_HOST_USER,
-                    recipient_list=[instance.user.email]
-                )
+                # Отправляем уведомление об отклонении
+                print('Документ отклонен')
+                send_rejection_notification(instance)
 
 
 class DocumentDestroyAPIView(generics.DestroyAPIView):

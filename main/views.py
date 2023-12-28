@@ -47,20 +47,15 @@ class DocumentUpdateAPIView(generics.UpdateAPIView):
     def perform_update(self, serializer):
         instance = serializer.instance
 
-        # Получаем значения до и после обновления
-        accept_file_before = instance.accept_file
-        denied_file_before = instance.denied_file
-
         # Выполняем обновление
         serializer.save()
 
         # Получаем значения после обновления
-        accept_file_after = serializer.instance.accept_file
-        denied_file_after = serializer.instance.denied_file
+        status_after = serializer.instance.status
 
-        if accept_file_after != denied_file_after:
+        if status_after != 3:
             # Проверяем изменения и выполняем нужные действия
-            if accept_file_before != accept_file_after and accept_file_after:
+            if status_after == 1:
                 # Отправляем уведомление о принятии
                 print('Документ принят')
                 send_mail(
@@ -70,7 +65,7 @@ class DocumentUpdateAPIView(generics.UpdateAPIView):
                     recipient_list=[instance.user.email]
                 )
 
-            if denied_file_before != denied_file_after and denied_file_after:
+            if status_after == 2:
                 # Отправляем уведомление об отклонении
                 print('Документ отклонён')
                 send_mail(

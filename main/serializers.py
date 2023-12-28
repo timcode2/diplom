@@ -17,7 +17,7 @@ class DocumentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Files
-        fields = ['id', 'user', 'file', 'accept_file', 'denied_file']
+        fields = ['id', 'user', 'file', 'status']
 
 
 class DocumentCheckSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class DocumentCheckSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Files
-        fields = ['id', 'accept_file', 'denied_file', 'user']
+        fields = ['id', 'status', 'user']
 
 
 class DocumentIdSerializer(serializers.ModelSerializer):

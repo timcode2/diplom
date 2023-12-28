@@ -8,38 +8,42 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Files
-        fields = ['file']
+        fields = ["file"]
 
 
 class DocumentListSerializer(serializers.ModelSerializer):
     """Сериализатор для прсмотра отправленных файлов"""
+
     user = UserFilesSerializer(read_only=True)  # вложенный сериализатор
 
     class Meta:
         model = Files
-        fields = ['id', 'user', 'file', 'status']
+        fields = ["id", "user", "file", "status"]
 
 
 class DocumentCheckSerializer(serializers.ModelSerializer):
     """Сериализатор для  админов на принятие или отклонение жокумента"""
+
     user = UserFilesSerializer(read_only=True)  # вложенный сериализатор
 
     class Meta:
         model = Files
-        fields = ['id', 'status', 'user']
+        fields = ["id", "status", "user"]
 
 
 class DocumentIdSerializer(serializers.ModelSerializer):
     """Сериализатор для удаления документов"""
+
     class Meta:
         model = Files
-        fields = ['id']
+        fields = ["id"]
 
 
 class DocumentAllSerializer(serializers.ModelSerializer):
     """Сериализатор для просмотра данных каждого документа отдельно"""
-    user = UserFilesSerializer(read_only=True) # вложенный сериализатор
+
+    user = UserFilesSerializer(read_only=True)  # вложенный сериализатор
 
     class Meta:
         model = Files
-        fields = '__all__'
+        fields = "__all__"

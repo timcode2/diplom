@@ -3,13 +3,12 @@ from django.db import models
 
 
 class User(AbstractUser):
-
     username = None
-    email = models.EmailField(unique=True, verbose_name='Почта')
+    email = models.EmailField(unique=True, verbose_name="Почта")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     class Meta:
-        verbose_name = 'пользователь'
-        verbose_name_plural = 'пользователи'
+        verbose_name = "пользователь"
+        verbose_name_plural = "пользователи"

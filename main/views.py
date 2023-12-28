@@ -4,8 +4,13 @@ from django.core.mail import send_mail
 
 from main.models import Files
 from config.settings import EMAIL_HOST_USER
-from main.serializers import DocumentSerializer, DocumentListSerializer, DocumentCheckSerializer, DocumentIdSerializer, \
-    DocumentAllSerializer
+from main.serializers import (
+    DocumentSerializer,
+    DocumentListSerializer,
+    DocumentCheckSerializer,
+    DocumentIdSerializer,
+    DocumentAllSerializer,
+)
 from users.models import User
 
 
@@ -20,10 +25,10 @@ class DocumentCreateAPIView(generics.CreateAPIView):
 
         # Отправка письма администратору с оповещением
         send_mail(
-            subject='Новый документ',
-            message=f'Вам пришел новый документ от {self.request.user.email}',
+            subject="Новый документ",
+            message=f"Вам пришел новый документ от {self.request.user.email}",
             from_email=EMAIL_HOST_USER,
-            recipient_list=[admin_email]
+            recipient_list=[admin_email],
         )
 
 
@@ -57,22 +62,22 @@ class DocumentUpdateAPIView(generics.UpdateAPIView):
             # Проверяем изменения и выполняем нужные действия
             if status_after == 1:
                 # Отправляем уведомление о принятии
-                print('Документ принят')
+                print("Документ принят")
                 send_mail(
-                    subject='Ответ администратора',
-                    message=f'Ваш документ принят {self.request.user.email}',
+                    subject="Ответ администратора",
+                    message=f"Ваш документ принят {self.request.user.email}",
                     from_email=EMAIL_HOST_USER,
-                    recipient_list=[instance.user.email]
+                    recipient_list=[instance.user.email],
                 )
 
             if status_after == 2:
                 # Отправляем уведомление об отклонении
-                print('Документ отклонён')
+                print("Документ отклонён")
                 send_mail(
-                    subject='Ответ администратора',
-                    message=f'Ваш документ отклонён, попробуйте отправить его еще раз {self.request.user.email}',
+                    subject="Ответ администратора",
+                    message=f"Ваш документ отклонён, попробуйте отправить его еще раз {self.request.user.email}",
                     from_email=EMAIL_HOST_USER,
-                    recipient_list=[instance.user.email]
+                    recipient_list=[instance.user.email],
                 )
 
 

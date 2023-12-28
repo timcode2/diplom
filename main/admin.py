@@ -5,7 +5,7 @@ from main.utils import send_approval_notification, send_rejection_notification
 
 @admin.register(Files)
 class FilesAdmin(admin.ModelAdmin):
-    list_display = ('user', 'file', 'status')
+    list_display = ("user", "file", "status")
 
     def save_model(self, request, obj, form, change):
         # Сохраняем изменения в модели

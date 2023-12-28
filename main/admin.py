@@ -1,7 +1,7 @@
-# main/admin.py
 from django.contrib import admin
 from main.models import Files
-from main.views import send_approval_notification, send_rejection_notification
+from main.utils import send_approval_notification, send_rejection_notification
+
 
 @admin.register(Files)
 class FilesAdmin(admin.ModelAdmin):

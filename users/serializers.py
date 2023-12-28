@@ -8,6 +8,15 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
 
+    def save(self, **kwargs):
+        """Сохранение пользователя в базу данных"""
+
+        data = super().save(**kwargs)
+        data.set_password(self.validated_data['password'])  # Задание пароля
+        data.save()  # Сохранение в базе данных
+
+        return data
+
 
 class UserFilesSerializer(serializers.ModelSerializer):
     class Meta:

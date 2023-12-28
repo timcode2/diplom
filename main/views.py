@@ -76,20 +76,27 @@ class DocumentUpdateAPIView(generics.UpdateAPIView):
         accept_file_after = serializer.instance.accept_file
         denied_file_after = serializer.instance.denied_file
 
-        print(f'accept_file_before: {accept_file_before}, denied_file_before: {denied_file_before}')
-        print(f'accept_file_after: {accept_file_after}, denied_file_after: {denied_file_after}')
-
         if accept_file_after != denied_file_after:
             # Проверяем изменения и выполняем нужные действия
             if accept_file_before != accept_file_after and accept_file_after:
                 # Отправляем уведомление о принятии
                 print('Документ принят')
-                send_approval_notification(instance)
+                send_mail(
+                    subject='Ответ администратора',
+                    message=f'Ваш документ принят {self.request.user.email}',
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=[instance.user.email]
+                )
 
             if denied_file_before != denied_file_after and denied_file_after:
                 # Отправляем уведомление об отклонении
-                print('Документ отклонен')
-                send_rejection_notification(instance)
+                print('Документ отклонён')
+                send_mail(
+                    subject='Ответ администратора',
+                    message=f'Ваш документ отклонён, попробуйте отправить его еще раз {self.request.user.email}',
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=[instance.user.email]
+                )
 
 
 class DocumentDestroyAPIView(generics.DestroyAPIView):
